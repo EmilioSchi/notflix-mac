@@ -1,0 +1,96 @@
+#! /bin/csh -f
+
+set cachedir = "$HOME/.cache/notflix-mac"
+set baseurl = "https://1337x.wtf"
+set query = ""
+
+mkdir -p $cachedir
+
+set date_fields=`date`
+if ($#argv < 1) then
+	echo "ERROR | $date_fields | There are no arguments"
+	echo ""
+	echo "USAGE"
+	echo "  Enter the name of the script followed by keywords"
+	echo "  of the movie that you want to see."
+	echo ""
+	echo "  $ notflix-mac the title of the movie"
+	goto EXIT
+else
+	set query = $argv[1]
+	if ($#argv >= 2) then
+		foreach x (`seq 2 1 $#argv`)
+			set query = $query"+"$argv[$x]
+		end
+	endif
+	echo "INFO | $date_fields | Searching for $query"
+endif
+
+set i = 1
+while ($i <= 30)
+	set pageurl = "$baseurl""/search/""$query""/""$i""/"
+
+	set date_fields=`date`
+	echo "INFO | $date_fields | Download $pageurl"
+	curl -s $pageurl > $cachedir/tmp.html
+	set date_fields=`date`
+	echo "INFO | $date_fields | Try to get titles"
+	set nr = `grep -E -c --only-matching '<a href="/torrent/.*</a>' $cachedir/tmp.html`
+	@ nvar = $nr
+	echo "INFO | $date_fields | Found $nvar titles"
+	set date_fields=`date`
+	if ($nvar < 1) then
+		echo "INFO | $date_fields | No Result found"
+		goto EXIT
+	endif
+	grep -o '<a href="/torrent/.*</a>' $cachedir/tmp.html | sed 's/<[^>]*>//g' > $cachedir/titles.bw
+	#wc -l $cachedir/titles.bw | awk '{print $1}'
+
+	# Seeders and Leechers
+	grep -o '<td class="coll-2 seeds.*</td>\|<td class="coll-3 leeches.*</td>' $cachedir/tmp.html | sed 's/<[^>]*>//g' | sed 'N;s/\n/ /' > $cachedir/seedleech.bw
+
+	# Size
+	grep -o '<td class="coll-4 size.*</td>' $cachedir/tmp.html | sed 's/<span class="seeds">.*<\/span>//g' | sed -e 's/<[^>]*>//g' > $cachedir/size.bw
+
+	# Links
+	grep -E '/torrent/' $cachedir/tmp.html | sed -E 's#.*(/torrent/.*)/">.*/#\1#' | sed 's/td>//g' > $cachedir/links.bw
+
+	# Clearning up some data to display
+	sed 's/\./ /g; s/\-/ /g' $cachedir/titles.bw | sed 's/[^A-Za-z0-9 ]//g' | tr -s " " > $cachedir/tmp && mv $cachedir/tmp $cachedir/titles.bw
+
+	awk '{print NR " - ["$0"]"}' $cachedir/size.bw > $cachedir/tmp && mv $cachedir/tmp $cachedir/size.bw
+	awk '{print "[S:"$1 ", L:"$2"]" }' $cachedir/seedleech.bw > $cachedir/tmp && mv $cachedir/tmp $cachedir/seedleech.bw
+
+	paste -d " " $cachedir/size.bw $cachedir/titles.bw $cachedir/seedleech.bw > $cachedir/list.txt
+
+	echo "0 - Search in another page"
+	foreach x (`seq 1 1 $nvar`)
+		set param = "$x""p"
+		set line = "`sed -n $param $cachedir/list.txt`"
+		echo "$line"
+	end
+	echo "Choose movie writing the index or enter 0 to swap page:"
+	set index = $<
+
+	if ($index == 0) then
+		@ i++
+	else
+		set i = 31
+	endif
+end
+
+download_magnet:
+	set param = "$index""p"
+	set url = "`sed -n $param $cachedir/links.bw`"
+	set fullURL = "$baseurl""${url}""/"
+	curl -s $fullURL > $cachedir/tmp.html
+	grep -E --only-matching "magnet:\?xt=urn:btih:[a-zA-Z0-9]*" $cachedir/tmp.html | head -n 1 > $cachedir/magnet.data
+	set mfile = `sed -n 1p $cachedir/magnet.data`
+	set date_fields=`date`
+	echo "INFO | $date_fields | Stream through the magnet link $mfile"
+
+stream_video:
+	sleep 3 && webtorrent "$mfile" --mpv
+
+EXIT:
+	exit 0
