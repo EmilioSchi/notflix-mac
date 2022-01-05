@@ -4,7 +4,7 @@
 ### Introduction
 It is like a Netflix but in reality it is a scraper that take magnetic torrent links and easily stream the chosen movie.
 
-I stole the idea from [notflix](https://github.com/Bugswriter/notflix)
+I stole the idea from [notflix](https://github.com/Bugswriter/notflix).
 
 ### How does this work?
 
@@ -17,6 +17,12 @@ Open ZSH terminal and enter the name of the script followed by keywords of the m
 ```sh
 notflix-mac the title of the movie
 ```
+##
+<p align="center">
+<img src="./example.png" width="400px">
+</p>
+
+
 To swim through many page (if there are other page) select 0, otherwis you can chose the movie entering the desired number.
 
 ## Dependencies
