@@ -2,7 +2,7 @@
 <p align="center">notflix-mac is a command terminal tool that search magnet links and stream it with webtorrent</p>
 
 ### Introduction
-It is like a Netflix but in reality it is a scraper that take magnetic torrent links and easily stream the chosen movie.
+It is like a Netflix but in reality it is a scraper that takes magnetic torrent links and easily stream the chosen movie.
 
 I stole the idea from [notflix](https://github.com/Bugswriter/notflix).
 
