@@ -43,11 +43,11 @@ So a PATH variable is being set somewhere.
 ## Installation on Mac (maybe work on linux too)
 
 ```sh
-$ sudo curl -sL "https://github.com/EmilioSchi/notflix-mac/master/notflix-mac" -o /usr/local/bin/notflix-mac
+$ sudo curl -sL "https://raw.githubusercontent.com/EmilioSchi/notflix-mac/main/notflix-mac" -o /usr/local/bin/notflix-mac
 $ sudo chmod +x /usr/local/bin/notflix-mac
 ```
 
 ## Uninstall
 ```sh
-rm -f /usr/local/bin/notflix-mac
+$ sudo rm -f /usr/local/bin/notflix-mac
 ```
