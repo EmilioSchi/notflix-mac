@@ -19,22 +19,23 @@ notflix-mac the title of the movie
 ```
 ##
 <p align="center">
-<img src="./example.png" width="400px">
+<img src="./example.png" width="500px">
 </p>
 
 
 To swim through many page (if there are other page) select 0, otherwis you can chose the movie entering the desired number.
 
 ## Dependencies
-# webtorrent
+### webtorrent
 To install with brew:
 ```sh
 brew install webtorrent-cli
 ```
 
-# mpv
+### mpv
 Get it on the [official site: https://mpv.io/installation/](https://mpv.io/installation/)
-then you need to add mpv path to the PATH variable in ZSH.
+
+Then you need to add mpv path to the PATH variable in ZSH.
 
 Open configuration file of ZSH writing
 ```sh
