@@ -43,7 +43,7 @@ So a PATH variable is being set somewhere.
 ## Installation on Mac (maybe work on linux too)
 
 ```sh
-$ sudo curl -sL "https://raw.githubusercontent.com/Bugswriter/notflix/master/notflix" -o /usr/local/bin/notflix-mac
+$ sudo curl -sL "https://github.com/EmilioSchi/notflix-mac/master/notflix-mac" -o /usr/local/bin/notflix-mac
 $ sudo chmod +x /usr/local/bin/notflix-mac
 ```
 
